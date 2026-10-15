@@ -18,6 +18,11 @@
         <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle navigation">☰ MENU</button>
         <nav class="nav-links" id="navLinks" aria-label="Main navigation">
             <a href="#home">Home</a><a href="#collection">Collection</a><a href="#about">Our Story</a><a href="#experience">Experience</a><a href="#contact">Contact</a>
+            @auth
+                <a href="{{ route('account') }}">Account</a>
+            @else
+                <a href="{{ route('login') }}">Sign in</a>
+            @endauth
         </nav>
     </div>
 </header>

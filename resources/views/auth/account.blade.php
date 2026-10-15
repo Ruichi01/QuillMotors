@@ -17,6 +17,9 @@
         <h1>Welcome, {{ auth()->user()->name }}.</h1>
         <p class="intro">Your account is ready. The next step will be connecting it to saved vehicles and buyer-to-seller conversations.</p>
         <div class="account-detail"><span>Email</span><strong>{{ auth()->user()->email }}</strong></div>
+        @if (auth()->user()->role === 'admin')
+            <a class="btn" href="{{ route('admin.dashboard') }}">Open admin dashboard <span>↗</span></a>
+        @endif
         <a class="btn" href="{{ route('home') }}">Explore Quill Motors <span>↗</span></a>
         <form method="POST" action="{{ route('logout') }}">
             @csrf

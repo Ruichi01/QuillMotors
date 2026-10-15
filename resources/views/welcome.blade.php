@@ -38,7 +38,7 @@
             <h1>NOT MADE<br>TO <span>BLEND IN.</span></h1>
             <p class="hero-description">Some cars take you places. Others make every journey unforgettable. Discover your next automotive obsession.</p>
             <div class="hero-actions">
-                <a href="#collection" class="btn">Explore collection <span>↗</span></a>
+                <a href="{{ route('store') }}" class="btn">Browse the store <span>↗</span></a>
                 <a href="#about" class="btn btn-outline">Discover Quill</a>
             </div>
         </div>
@@ -58,34 +58,36 @@
 <section class="section" id="collection">
     <div class="container">
         <div class="inventory-header">
-            <div><p class="eyebrow">The curated collection</p><h2 class="section-heading">Machines with<br>personality.</h2><p class="section-copy">Explore a selection of remarkable automobiles. These sample listings can later be connected to your Laravel vehicle database.</p></div>
-            <a href="#contact" class="text-link">Find your car <span>↗</span></a>
+            <div><p class="eyebrow">Recently added</p><h2 class="section-heading">Find your next<br>signature drive.</h2><p class="section-copy">Explore the latest automobiles added to the Quill Motors marketplace.</p></div>
         </div>
-        <div class="vehicle-grid">
-            <!-- VEHICLE IMAGE: 1200 × 750 px (16:10). Replace each image in public/images/. -->
-            <article class="vehicle-card">
-                <a href="#contact" class="vehicle-image-wrap" aria-label="Ask about Model Name One">
-                    <img class="vehicle-image" src="{{ asset('images/car-01.jpg') }}" alt="Model Name One performance coupe" loading="lazy" onerror="this.style.display='none'">
-                    <div class="image-fallback"><span>01</span><small>YOUR VEHICLE PHOTO HERE</small></div><span class="vehicle-tag">Featured</span>
-                </a>
-                <div class="vehicle-info"><span class="vehicle-category">Performance coupe</span><h3 class="vehicle-name">MODEL NAME ONE</h3><p class="vehicle-year">2025 · Sample listing</p><div class="vehicle-specs"><span>V8 / ENGINE</span><span>Automatic</span><span>2 Doors</span></div><a href="#contact" class="vehicle-price-row"><span class="vehicle-price">₱ PRICE HERE</span><span class="vehicle-arrow">↗</span></a></div>
-            </article>
-            <article class="vehicle-card">
-                <a href="#contact" class="vehicle-image-wrap" aria-label="Ask about Model Name Two">
-                    <img class="vehicle-image" src="{{ asset('images/car-02.jpg') }}" alt="Model Name Two luxury SUV" loading="lazy" onerror="this.style.display='none'">
-                    <div class="image-fallback"><span>02</span><small>YOUR VEHICLE PHOTO HERE</small></div><span class="vehicle-tag">New arrival</span>
-                </a>
-                <div class="vehicle-info"><span class="vehicle-category">Luxury SUV</span><h3 class="vehicle-name">MODEL NAME TWO</h3><p class="vehicle-year">2025 · Sample listing</p><div class="vehicle-specs"><span>V6 / ENGINE</span><span>Automatic</span><span>5 Seats</span></div><a href="#contact" class="vehicle-price-row"><span class="vehicle-price">₱ PRICE HERE</span><span class="vehicle-arrow">↗</span></a></div>
-            </article>
-            <article class="vehicle-card">
-                <a href="#contact" class="vehicle-image-wrap" aria-label="Ask about Model Name Three">
-                    <img class="vehicle-image" src="{{ asset('images/car-03.jpg') }}" alt="Model Name Three grand tourer" loading="lazy" onerror="this.style.display='none'">
-                    <div class="image-fallback"><span>03</span><small>YOUR VEHICLE PHOTO HERE</small></div><span class="vehicle-tag">Editor's choice</span>
-                </a>
-                <div class="vehicle-info"><span class="vehicle-category">Grand tourer</span><h3 class="vehicle-name">MODEL NAME THREE</h3><p class="vehicle-year">2024 · Sample listing</p><div class="vehicle-specs"><span>V8 / ENGINE</span><span>Automatic</span><span>2 Doors</span></div><a href="#contact" class="vehicle-price-row"><span class="vehicle-price">₱ PRICE HERE</span><span class="vehicle-arrow">↗</span></a></div>
-            </article>
+        <div class="inventory-carousel">
+            <button class="carousel-arrow carousel-arrow-prev" type="button" data-carousel-direction="-1" aria-label="Previous recently added cars">←</button>
+            <div class="inventory-viewport">
+                <div class="inventory-track" id="recentVehicles">
+                    @forelse ($recentCars as $car)
+                        @php($image = $car->images->firstWhere('is_primary', true) ?? $car->images->first())
+                        <article class="vehicle-card">
+                            <a href="{{ route('store.show', $car) }}" class="vehicle-image-wrap" aria-label="View {{ $car->make }} {{ $car->model }}">
+                                @if ($image)
+                                    <img class="vehicle-image" src="{{ asset($image->image_path) }}" alt="{{ $car->make }} {{ $car->model }}" loading="lazy">
+                                @endif
+                                <div class="image-fallback"><span>{{ sprintf('%02d', $loop->iteration) }}</span><small>PHOTO COMING SOON</small></div><span class="vehicle-tag">Recently added</span>
+                            </a>
+                            <div class="vehicle-info"><span class="vehicle-category">{{ $car->category->name }}</span><h3 class="vehicle-name">{{ $car->make }} {{ $car->model }}</h3><p class="vehicle-year">{{ $car->year }} · {{ ucfirst($car->condition) }}</p><div class="vehicle-specs"><span>{{ number_format($car->mileage) }} KM</span><span>{{ $car->transmission ?: 'Contact us' }}</span><span>{{ $car->fuel_type ?: 'Available' }}</span></div><a href="{{ route('store.show', $car) }}" class="vehicle-price-row"><span class="vehicle-price">₱ {{ number_format($car->price, 0) }}</span><span class="vehicle-arrow">↗</span></a></div>
+                        </article>
+                    @empty
+                        <p class="empty-state">New vehicles are being prepared. Visit the market soon.</p>
+                    @endforelse
+                    <a class="see-more-card" href="{{ route('store') }}">
+                        <span class="see-more-mark">↗</span>
+                        <span class="eyebrow">The full market</span>
+                        <strong>See more<br>cars.</strong>
+                        <span class="see-more-link">Browse all vehicles</span>
+                    </a>
+                </div>
+            </div>
+            <button class="carousel-arrow carousel-arrow-next" type="button" data-carousel-direction="1" aria-label="Next recently added cars">→</button>
         </div>
-        <div class="inventory-bottom"><a href="#contact" class="btn">Request the full inventory <span>↗</span></a></div>
     </div>
 </section>
 

@@ -1,0 +1,120 @@
+/* Quill Motors — landing page styles
+   Brand palette: charcoal, ivory, champagne gold.
+   All image sizes and replacement instructions are in welcome.blade.php. */
+:root{--bg:#101112;--surface:#191a1b;--surface-light:#222324;--gold:#c9a96e;--gold-light:#e4c994;--white:#f4f2ed;--muted:#a1a19d;--line:rgba(255,255,255,.12);--container:1240px}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;line-height:1.6}
+a{color:inherit;text-decoration:none}
+img{display:block;width:100%;object-fit:cover}
+button,input,textarea,select{font:inherit}
+button,a{-webkit-tap-highlight-color:transparent}
+.container{width:min(var(--container),90%);margin-inline:auto}
+.eyebrow{color:var(--gold);font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;font-weight:700}
+.section{padding:110px 0}
+.section-heading{font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);text-transform:uppercase;line-height:1;margin:14px 0 18px;font-weight:600}
+.section-copy{color:var(--muted);max-width:570px;font-size:.95rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:16px;min-height:49px;padding:0 23px;border:1px solid var(--gold);background:var(--gold);color:#171717;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background .25s,border-color .25s,transform .25s}
+.btn:hover{background:var(--gold-light);border-color:var(--gold-light);transform:translateY(-2px)}
+.btn-outline{background:transparent;color:var(--white);border-color:rgba(255,255,255,.45)}
+.btn-outline:hover{color:#171717;background:var(--white);border-color:var(--white)}
+.navbar{height:82px;display:flex;align-items:center;border-bottom:1px solid var(--line);background:rgba(16,17,18,.96);position:sticky;top:0;z-index:100;backdrop-filter:blur(14px)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:28px}
+.brand{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:800;letter-spacing:.07em;white-space:nowrap}
+.brand span{color:var(--gold)}
+.nav-links{display:flex;gap:30px;align-items:center}
+.nav-links a{font-size:.72rem;color:#d4d4d0;text-transform:uppercase;letter-spacing:.08em;transition:color .2s}
+.nav-links a:hover,.footer-links a:hover{color:var(--gold)}
+.nav-toggle{display:none;color:var(--white);background:transparent;border:1px solid var(--line);padding:8px 12px;cursor:pointer}
+.hero{position:relative;min-height:min(760px,calc(100svh - 82px));display:flex;align-items:center;overflow:hidden;background:radial-gradient(ellipse at 76% 48%,#34383b 0%,#202224 32%,#111213 73%)}
+.hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 55%;z-index:1}
+.hero-fallback{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse at 77% 65%,rgba(201,169,110,.2),transparent 30%),linear-gradient(135deg,transparent 35%,rgba(255,255,255,.035) 35.2%,transparent 36%),#171819}
+.hero::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,rgba(10,11,12,.97) 0%,rgba(10,11,12,.82) 38%,rgba(10,11,12,.25) 75%,rgba(10,11,12,.2) 100%),linear-gradient(0deg,rgba(10,11,12,.7),transparent 50%);pointer-events:none}
+.hero-container{position:relative;z-index:3}
+.hero-content{padding:100px 0;max-width:710px}
+.hero h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(4rem,9vw,8rem);font-weight:700;text-transform:uppercase;line-height:.88;letter-spacing:-.025em;margin:25px 0}
+.hero h1 span{color:var(--gold)}
+.hero-description{max-width:450px;color:#d0d0cd;font-size:.98rem;margin-bottom:30px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px}
+.hero-index{position:absolute;z-index:4;bottom:35px;right:5%;color:#ddd;font-size:.7rem;letter-spacing:.15em}
+.hero-bottom-label{position:absolute;z-index:4;bottom:35px;left:5%;font-size:.62rem;letter-spacing:.17em;color:#c7c7c3;display:flex;align-items:center;gap:10px}
+.hero-bottom-label span{display:inline-block;width:25px;height:1px;background:var(--gold)}
+.values{border-bottom:1px solid var(--line);border-top:1px solid var(--line);background:#151617}
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr)}
+.value-item{padding:32px;border-right:1px solid var(--line)}
+.value-item:first-child{border-left:1px solid var(--line)}
+.value-number{color:var(--gold);font-size:.72rem;letter-spacing:.15em}
+.value-item h3{font-family:'Barlow Condensed',sans-serif;font-size:1.55rem;text-transform:uppercase;margin:8px 0}
+.value-item p{color:var(--muted);font-size:.82rem}
+.inventory-header{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:38px}
+.inventory-header .section-heading{margin-bottom:18px}
+.text-link{display:inline-flex;gap:18px;align-items:center;padding:13px 0;border-bottom:1px solid var(--gold);font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.text-link span{color:var(--gold)}
+.vehicle-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.vehicle-card{background:var(--surface);border:1px solid var(--line);transition:border-color .25s,transform .25s;min-width:0}
+.vehicle-card:hover{border-color:rgba(201,169,110,.65);transform:translateY(-5px)}
+.vehicle-image-wrap{position:relative;display:block;overflow:hidden;background:#262728;aspect-ratio:16/10}
+.vehicle-image{position:relative;z-index:1;height:100%;object-fit:cover;transition:transform .5s}
+.vehicle-card:hover .vehicle-image{transform:scale(1.045)}
+.image-fallback{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(ellipse at 50% 70%,#353637,#222324 65%,#191a1b);color:#777;letter-spacing:.14em}
+.image-fallback span{font-family:'Barlow Condensed',sans-serif;font-size:3rem;color:#bba16e}
+.image-fallback small{font-size:.58rem}
+.vehicle-tag{position:absolute;z-index:2;top:14px;left:14px;background:var(--gold);color:#161616;padding:5px 9px;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.vehicle-info{padding:23px}
+.vehicle-category{color:var(--gold);text-transform:uppercase;letter-spacing:.14em;font-size:.65rem}
+.vehicle-name{font-family:'Barlow Condensed',sans-serif;font-size:1.9rem;text-transform:uppercase;margin:7px 0 2px;line-height:1.1}
+.vehicle-year{color:var(--muted);font-size:.8rem}
+.vehicle-specs{display:flex;flex-wrap:wrap;gap:12px;margin:22px 0;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:#c7c7c3;font-size:.72rem}
+.vehicle-price-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.vehicle-price{font-size:1rem;font-weight:700}
+.vehicle-arrow{color:var(--gold);font-size:1.3rem}
+.inventory-bottom{display:flex;justify-content:center;margin-top:38px}
+.story{background:#e9e5dc;color:#181918}
+.story-grid{display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:75px}
+.story-image-wrap{position:relative;min-height:530px;background:linear-gradient(145deg,#d0cbc0,#a29e94);overflow:hidden}
+.story-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.story-fallback{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#514f49;letter-spacing:.15em}
+.story-fallback span{font-family:'Barlow Condensed',sans-serif;font-size:2.3rem}
+.story-fallback small{font-size:.6rem}
+.story-image-label{position:absolute;z-index:2;right:0;bottom:25px;background:var(--gold);padding:17px 22px;color:#181818;font-size:.7rem;letter-spacing:.1em;font-weight:700}
+.story .eyebrow{color:#7f6233}
+.story .section-heading{font-size:clamp(2.8rem,5vw,5rem)}
+.story .section-copy{color:#5c5c57;margin-bottom:20px}
+.story .btn{margin-top:8px;background:#171818;border-color:#171818;color:white}
+.story .btn:hover{background:#383a39}
+.experience{position:relative;min-height:480px;display:flex;align-items:center;overflow:hidden;background:radial-gradient(ellipse at 75%,#34383a,#171819 70%)}
+.experience-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.experience-overlay{position:absolute;z-index:2;inset:0;background:linear-gradient(90deg,rgba(10,11,12,.9),rgba(10,11,12,.48) 60%,rgba(10,11,12,.15))}
+.experience-container{position:relative;z-index:3}
+.experience-content{max-width:660px;padding:90px 0}
+.experience h2{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;font-size:clamp(3.5rem,7vw,6.5rem);line-height:.93;margin:18px 0}
+.experience p:not(.eyebrow){color:#d0d0cd;max-width:460px;margin-bottom:28px}
+.contact-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:85px}
+.contact-details{display:grid;gap:24px;margin-top:35px}
+.contact-detail{border-bottom:1px solid var(--line);padding-bottom:20px}
+.contact-detail h3{font-size:.76rem;text-transform:uppercase;color:var(--gold);letter-spacing:.12em;margin-bottom:7px}
+.contact-detail p,.contact-detail a{color:var(--muted);font-size:.9rem}
+.contact-form{background:var(--surface);border:1px solid var(--line);padding:35px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;font-size:.76rem;color:#deded9;margin-bottom:8px}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:13px 14px;color:var(--white);background:#111213;border:1px solid var(--line);border-radius:0;outline:none}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--gold)}
+.form-group textarea{min-height:125px;resize:vertical}
+.form-group select option{background:#111213}
+.optional{color:var(--muted)}
+.submit-btn{width:100%}
+.form-note{margin-top:12px;color:var(--muted);font-size:.72rem}
+.alert-success,.alert-error{padding:13px 15px;margin-bottom:20px;font-size:.85rem}
+.alert-success{border:1px solid #3b7956;background:#153122;color:#c6f2d6}
+.alert-error{border:1px solid #8c4141;background:#321919;color:#ffd3d3}
+.alert-error ul{padding-left:20px;margin-top:8px}
+.footer{background:#090a0a;border-top:1px solid var(--line);padding:55px 0 25px}
+.footer-top{display:flex;justify-content:space-between;gap:40px;padding-bottom:40px}
+.footer-description{color:var(--muted);font-size:.85rem;max-width:330px;margin-top:12px}
+.footer-links{display:flex;flex-wrap:wrap;gap:24px;align-items:start}
+.footer-links a{color:var(--muted);font-size:.75rem}
+.footer-bottom{border-top:1px solid var(--line);padding-top:22px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;color:#777873;font-size:.7rem}
+@media(max-width:950px){.nav-links{gap:16px}.nav-links a{font-size:.65rem}.vehicle-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.story-grid{gap:35px}.contact-grid{gap:35px}}
+@media(max-width:720px){.section{padding:75px 0}.navbar{height:72px}.brand{font-size:1.7rem}.nav-toggle{display:block}.nav-links{display:none;position:absolute;top:71px;left:0;right:0;padding:20px 5%;background:#121313;border-bottom:1px solid var(--line);flex-direction:column;align-items:stretch;gap:0}.nav-links.open{display:flex}.nav-links a{padding:14px 0;border-bottom:1px solid var(--line);font-size:.8rem}.hero{min-height:min(760px,calc(100svh - 72px))}.hero::after{background:linear-gradient(90deg,rgba(10,11,12,.88),rgba(10,11,12,.48)),linear-gradient(0deg,rgba(10,11,12,.6),transparent)}.hero-content{padding:80px 0}.hero h1{font-size:clamp(3.8rem,15vw,6rem)}.hero-bottom-label{bottom:20px;font-size:.5rem}.hero-index{display:none}.values-grid{grid-template-columns:1fr}.value-item,.value-item:first-child{border-left:0;border-right:0;border-bottom:1px solid var(--line);padding:25px 5%}.inventory-header{align-items:start;flex-direction:column}.vehicle-grid{grid-template-columns:1fr}.vehicle-info{padding:21px}.story-grid,.contact-grid{grid-template-columns:1fr}.story-image-wrap{min-height:0;aspect-ratio:4/5}.experience{min-height:460px}.form-row{grid-template-columns:1fr;gap:0}.contact-form{padding:23px}.footer-top{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important}}

@@ -100,6 +100,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 .detail-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:70px;align-items:center}
 .detail-image-wrap{position:relative;min-height:560px;overflow:hidden;background:#262728}
 .detail-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.detail-gallery{position:absolute;z-index:3;right:14px;bottom:14px;display:flex;gap:7px;max-width:calc(100% - 28px);overflow:auto;padding:5px;background:#111b;border:1px solid #fff3}.detail-gallery img{width:64px;height:48px;object-fit:cover;opacity:.72;cursor:pointer}.detail-gallery img:hover{opacity:1}
 .detail-content .section-heading{margin-block:15px 22px}
 .detail-price{color:var(--gold);font-size:1.5rem;font-weight:700}
 .detail-description{max-width:510px;color:var(--muted);margin:20px 0 28px}

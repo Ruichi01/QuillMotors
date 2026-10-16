@@ -7,14 +7,26 @@ use App\Models\Car;
 use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class AdminCarController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $cars = Car::query()
+            ->with('category')
+            ->when($request->filled('search'), function ($query) use ($request): void {
+                $search = $request->string('search')->trim()->toString();
+                $query->where(fn ($query) => $query->where('make', 'like', "%{$search}%")->orWhere('model', 'like', "%{$search}%"));
+            })
+            ->when($request->filled('category_id'), fn ($query) => $query->where('category_id', $request->integer('category_id')))
+            ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')->toString()))
+            ->latest()->paginate(10)->withQueryString();
+
         return view('admin.cars.index', [
-            'cars' => Car::with('category')->latest()->paginate(10),
+            'cars' => $cars,
+            'categories' => Category::orderBy('name')->get(),
         ]);
     }
 
@@ -25,7 +37,8 @@ class AdminCarController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        Car::create($this->validated($request));
+        $car = Car::create($this->validated($request));
+        $this->storeImages($request, $car);
 
         return redirect()->route('admin.cars.index')->with('success', 'Vehicle added to the inventory.');
     }
@@ -38,6 +51,7 @@ class AdminCarController extends Controller
     public function update(Request $request, Car $car): RedirectResponse
     {
         $car->update($this->validated($request));
+        $this->storeImages($request, $car);
 
         return redirect()->route('admin.cars.index')->with('success', 'Vehicle updated successfully.');
     }
@@ -63,6 +77,20 @@ class AdminCarController extends Controller
             'condition' => ['required', 'string', 'max:60'],
             'description' => ['nullable', 'string', 'max:5000'],
             'status' => ['required', 'in:available,reserved,sold'],
+            'photos' => ['nullable', 'array', 'max:10'],
+            'photos.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
+    }
+
+    private function storeImages(Request $request, Car $car): void
+    {
+        foreach ($request->file('photos', []) as $index => $photo) {
+            $path = $photo->store('cars', 'public');
+            $car->images()->create([
+                'image_path' => 'storage/'.$path,
+                'is_primary' => !$car->images()->exists() && $index === 0,
+                'sort_order' => $car->images()->count(),
+            ]);
+        }
     }
 }

@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/faq-chat.css') }}">
 </head>
 <body>
 <header class="navbar">
@@ -43,7 +44,6 @@
             </div>
         </div>
     </div>
-    <div class="hero-index">Quill MOTORS / 001</div>
     <div class="hero-bottom-label"><span></span> PERFORMANCE · PRECISION · PRESTIGE</div>
 </section>
 
@@ -152,6 +152,7 @@
         <div class="footer-bottom"><p>© {{ date('Y') }} Quill Motors. All rights reserved.</p><p>DESIGNED FOR THE LOVE OF DRIVING.</p></div>
     </div>
 </footer>
+@include('partials.faq-chat')
 <script src="{{ asset('js/landing.js') }}" defer></script>
 </body>
 </html>

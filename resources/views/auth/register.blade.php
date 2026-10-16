@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/faq-chat.css') }}">
 </head>
 <body>
 <main class="auth-shell">
@@ -44,5 +45,6 @@
         <a class="back-link" href="{{ route('home') }}">← Back to Quill Motors</a>
     </section>
 </main>
+@include('partials.faq-chat')
 </body>
 </html>

@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/faq-chat.css') }}">
 </head>
 <body>
 <header class="navbar"><div class="container nav-inner"><a href="{{ route('home') }}" class="brand">Quill<span>.</span></a><nav class="nav-links" aria-label="Market navigation"><a href="{{ route('home') }}">Home</a><a href="{{ route('store') }}">Market</a>@auth<a href="{{ route('account') }}">Account</a>@else<a href="{{ route('login') }}">Sign in</a>@endauth</nav></div></header>
@@ -38,5 +39,6 @@
         @endforelse
     </div><div class="store-pagination">{{ $cars->links() }}</div></div></section>
 </main>
+@include('partials.faq-chat')
 </body>
 </html>

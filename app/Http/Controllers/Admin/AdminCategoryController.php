@@ -11,9 +11,13 @@ use Illuminate\View\View;
 
 class AdminCategoryController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        return view('admin.categories.index', ['categories' => Category::withCount('cars')->orderBy('name')->get()]);
+        $categories = Category::withCount('cars')
+            ->when($request->filled('search'), fn ($query) => $query->where('name', 'like', '%'.$request->string('search')->trim().'%'))
+            ->orderBy('name')->get();
+
+        return view('admin.categories.index', compact('categories'));
     }
 
     public function create(): View

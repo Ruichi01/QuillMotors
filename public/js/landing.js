@@ -26,6 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const recentVehicles = document.getElementById('recentVehicles');
+    const detailImage = document.querySelector('.detail-image');
+    document.querySelectorAll('[data-detail-image]').forEach((thumbnail) => {
+        thumbnail.addEventListener('click', () => {
+            if (detailImage) {
+                detailImage.src = thumbnail.dataset.detailImage;
+            }
+        });
+    });
+
     document.querySelectorAll('[data-carousel-direction]').forEach((button) => {
         button.addEventListener('click', () => {
             if (!recentVehicles || !recentVehicles.children.length) {

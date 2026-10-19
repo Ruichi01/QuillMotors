@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -56,6 +58,42 @@ class AuthController
     public function account(): View
     {
         return view('auth.account');
+    }
+
+    public function updateProfile(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:120'],
+            'email' => ['required', 'email', 'max:190', 'unique:users,email,'.auth()->id()],
+            'profile_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+        ]);
+
+        $user = $request->user();
+        $user->fill(['name' => $validated['name'], 'email' => $validated['email']]);
+
+        if ($request->hasFile('profile_photo')) {
+            if ($user->profile_photo_path) {
+                Storage::disk('public')->delete($user->profile_photo_path);
+            }
+
+            $user->profile_photo_path = $request->file('profile_photo')->store('profiles', 'public');
+        }
+
+        $user->save();
+
+        return back()->with('success', 'Profile updated successfully.');
+    }
+
+    public function updatePassword(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $request->user()->update(['password' => Hash::make($validated['password'])]);
+
+        return back()->with('success', 'Password changed successfully.');
     }
 
     public function logout(Request $request): RedirectResponse

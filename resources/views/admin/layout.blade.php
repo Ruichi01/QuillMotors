@@ -7,11 +7,13 @@
     <title>@yield('title', 'Admin') — Quill Motors</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     <link rel="stylesheet" href="{{ asset('css/faq-chat.css') }}">
 </head>
 <body class="admin-body">
+<div class="admin-store-nav">@include('partials.store-nav')</div>
 <aside class="admin-sidebar">
     <a class="admin-brand" href="{{ route('admin.dashboard') }}">Quill<span>.</span><small>CONTROL CENTER</small></a>
     <nav class="admin-nav" aria-label="Admin navigation">
@@ -33,5 +35,6 @@
     @yield('content')
 </main>
 @include('partials.faq-chat')
+<script src="{{ asset('js/landing.js') }}" defer></script>
 </body>
 </html>

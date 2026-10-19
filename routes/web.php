@@ -30,6 +30,8 @@ Route::middleware('guest')->group(function (): void {
 
 Route::middleware('auth')->group(function (): void {
     Route::get('/account', [AuthController::class, 'account'])->name('account');
+    Route::put('/account/profile', [AuthController::class, 'updateProfile'])->name('account.profile.update');
+    Route::put('/account/password', [AuthController::class, 'updatePassword'])->name('account.password.update');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 

@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AdminCarController extends Controller
@@ -50,7 +51,18 @@ class AdminCarController extends Controller
 
     public function update(Request $request, Car $car): RedirectResponse
     {
-        $car->update($this->validated($request));
+        $validated = $this->validated($request);
+        $removedImageIds = $this->validatedRemovedImageIds($request, $car);
+        $this->ensureImageLimit($request, $car, $removedImageIds);
+
+        if ((float) $validated['price'] !== (float) $car->price) {
+            $validated['original_price'] ??= $car->original_price ?: $car->price;
+        } else {
+            unset($validated['original_price']);
+        }
+
+        $car->update($validated);
+        $this->removeImages($car, $removedImageIds);
         $this->storeImages($request, $car);
 
         return redirect()->route('admin.cars.index')->with('success', 'Vehicle updated successfully.');
@@ -71,14 +83,17 @@ class AdminCarController extends Controller
             'model' => ['required', 'string', 'max:120'],
             'year' => ['required', 'integer', 'min:1900', 'max:'.(now()->year + 1)],
             'price' => ['required', 'numeric', 'min:0'],
+            'original_price' => ['nullable', 'numeric', 'min:0'],
             'mileage' => ['required', 'integer', 'min:0'],
             'transmission' => ['nullable', 'string', 'max:60'],
             'fuel_type' => ['nullable', 'string', 'max:60'],
             'condition' => ['required', 'string', 'max:60'],
             'description' => ['nullable', 'string', 'max:5000'],
             'status' => ['required', 'in:available,reserved,sold'],
-            'photos' => ['nullable', 'array', 'max:10'],
+            'photos' => ['nullable', 'array', 'max:4'],
             'photos.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'removed_image_ids' => ['nullable', 'array'],
+            'removed_image_ids.*' => ['integer'],
         ]);
     }
 
@@ -91,6 +106,43 @@ class AdminCarController extends Controller
                 'is_primary' => !$car->images()->exists() && $index === 0,
                 'sort_order' => $car->images()->count(),
             ]);
+        }
+    }
+
+    private function validatedRemovedImageIds(Request $request, Car $car): array
+    {
+        $ids = $request->input('removed_image_ids', []);
+
+        if (!is_array($ids)) {
+            return [];
+        }
+
+        return $car->images()->whereIn('id', array_map('intval', $ids))->pluck('id')->all();
+    }
+
+    private function ensureImageLimit(Request $request, Car $car, array $removedImageIds): void
+    {
+        $uploaded = count($request->file('photos', []));
+
+        if ($car->images()->count() - count($removedImageIds) + $uploaded > 4) {
+            throw ValidationException::withMessages([
+                'photos' => 'Each car can have up to 4 images. Remove an existing image before adding more.',
+            ]);
+        }
+    }
+
+    private function removeImages(Car $car, array $imageIds): void
+    {
+        $images = $car->images()->whereIn('id', $imageIds)->get();
+        $removedPrimary = $images->contains('is_primary', true);
+
+        foreach ($images as $image) {
+            Storage::disk('public')->delete(str_replace('storage/', '', $image->image_path));
+            $image->delete();
+        }
+
+        if ($removedPrimary && ($replacement = $car->images()->orderBy('sort_order')->first())) {
+            $replacement->update(['is_primary' => true]);
         }
     }
 }

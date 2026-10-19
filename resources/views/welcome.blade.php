@@ -20,7 +20,17 @@
         <nav class="nav-links" id="navLinks" aria-label="Main navigation">
             <a href="#home">Home</a><a href="#collection">Collection</a><a href="#about">Our Story</a><a href="#experience">Experience</a><a href="#contact">Contact</a>
             @auth
-                <a href="{{ route('account') }}">Account</a>
+                <div class="profile-menu">
+                    <button class="profile-menu-toggle" type="button" aria-expanded="false" aria-controls="profileMenu">
+                        @if (auth()->user()->profile_photo_path)<img src="{{ asset('storage/'.auth()->user()->profile_photo_path) }}" alt="">@else<span>{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>@endif
+                        {{ auth()->user()->name }}
+                    </button>
+                    <div class="profile-menu-panel" id="profileMenu" hidden>
+                        <a href="{{ route('account') }}">Profile settings</a>
+                        @if (auth()->user()->role === 'admin')<a href="{{ route('admin.dashboard') }}">Admin dashboard</a>@endif
+                        <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit">Sign out</button></form>
+                    </div>
+                </div>
             @else
                 <a href="{{ route('login') }}">Sign in</a>
             @endauth
@@ -73,7 +83,7 @@
                                 @endif
                                 <div class="image-fallback"><span>{{ sprintf('%02d', $loop->iteration) }}</span><small>PHOTO COMING SOON</small></div><span class="vehicle-tag">Recently added</span>
                             </a>
-                            <div class="vehicle-info"><span class="vehicle-category">{{ $car->category->name }}</span><h3 class="vehicle-name">{{ $car->make }} {{ $car->model }}</h3><p class="vehicle-year">{{ $car->year }} · {{ ucfirst($car->condition) }}</p><div class="vehicle-specs"><span>{{ number_format($car->mileage) }} KM</span><span>{{ $car->transmission ?: 'Contact us' }}</span><span>{{ $car->fuel_type ?: 'Available' }}</span></div><a href="{{ route('store.show', $car) }}" class="vehicle-price-row"><span class="vehicle-price">₱ {{ number_format($car->price, 0) }}</span><span class="vehicle-arrow">↗</span></a></div>
+                            <div class="vehicle-info"><span class="vehicle-category">{{ $car->category->name }}</span><h3 class="vehicle-name">{{ $car->make }} {{ $car->model }}</h3><p class="vehicle-year">{{ $car->year }} · {{ ucfirst($car->condition) }}</p><div class="vehicle-specs"><span>{{ number_format($car->mileage) }} KM</span><span>{{ $car->transmission ?: 'Contact us' }}</span><span>{{ $car->fuel_type ?: 'Available' }}</span></div><a href="{{ route('store.show', $car) }}" class="vehicle-price-row"><span class="vehicle-price">@if($car->original_price)<del>₱ {{ number_format($car->original_price, 0) }}</del> @endif ₱ {{ number_format($car->price, 0) }}</span><span class="vehicle-arrow">↗</span></a></div>
                         </article>
                     @empty
                         <p class="empty-state">New vehicles are being prepared. Visit the market soon.</p>

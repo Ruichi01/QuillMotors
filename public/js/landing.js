@@ -22,8 +22,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 navLinks.classList.remove('open');
                 navToggle.setAttribute('aria-expanded', 'false');
             }
+
         });
     }
+
+    document.querySelectorAll('.profile-menu-toggle').forEach((toggle) => {
+        toggle.addEventListener('click', (event) => {
+            event.stopPropagation();
+            const panel = document.getElementById(toggle.getAttribute('aria-controls'));
+            const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+
+            document.querySelectorAll('.profile-menu-toggle').forEach((otherToggle) => {
+                otherToggle.setAttribute('aria-expanded', 'false');
+                const otherPanel = document.getElementById(otherToggle.getAttribute('aria-controls'));
+                if (otherPanel) {
+                    otherPanel.hidden = true;
+                }
+            });
+
+            toggle.setAttribute('aria-expanded', String(!isOpen));
+            panel.hidden = isOpen;
+        });
+    });
+
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.profile-menu-toggle').forEach((toggle) => {
+            toggle.setAttribute('aria-expanded', 'false');
+            const panel = document.getElementById(toggle.getAttribute('aria-controls'));
+            if (panel) {
+                panel.hidden = true;
+            }
+        });
+    });
 
     const recentVehicles = document.getElementById('recentVehicles');
     const detailImage = document.querySelector('.detail-image');

@@ -14,6 +14,7 @@ class Car extends Model
         'model',
         'year',
         'price',
+        'original_price',
         'mileage',
         'transmission',
         'fuel_type',

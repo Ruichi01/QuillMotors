@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ asset('css/faq-chat.css') }}">
 </head>
 <body>
-<header class="navbar"><div class="container nav-inner"><a href="{{ route('home') }}" class="brand">Quill<span>.</span></a><nav class="nav-links" aria-label="Market navigation"><a href="{{ route('home') }}">Home</a><a href="{{ route('store') }}">Market</a>@auth<a href="{{ route('account') }}">Account</a>@else<a href="{{ route('login') }}">Sign in</a>@endauth</nav></div></header>
+@include('partials.store-nav')
 <main>
     <section class="section store-hero"><div class="container"><p class="eyebrow">The Quill Motors market</p><h1 class="section-heading">Find the car<br>that feels like you.</h1><p class="section-copy">Browse our available vehicles, then create an account to save cars and start a conversation with the seller.</p></div></section>
     <section class="section store-listing"><div class="container">
@@ -32,7 +32,7 @@
                     @if ($image)<img class="vehicle-image" src="{{ asset($image->image_path) }}" alt="{{ $car->make }} {{ $car->model }}" loading="lazy">@endif
                     <div class="image-fallback"><span>{{ sprintf('%02d', $car->id) }}</span><small>PHOTO COMING SOON</small></div><span class="vehicle-tag">Available</span>
                 </a>
-                <div class="vehicle-info"><span class="vehicle-category">{{ $car->category->name }}</span><h2 class="vehicle-name">{{ $car->make }} {{ $car->model }}</h2><p class="vehicle-year">{{ $car->year }} · {{ ucfirst($car->condition) }}</p><div class="vehicle-specs"><span>{{ number_format($car->mileage) }} KM</span><span>{{ $car->transmission ?: 'Contact us' }}</span><span>{{ $car->fuel_type ?: 'Available' }}</span></div><div class="vehicle-price-row"><span class="vehicle-price">₱ {{ number_format($car->price, 0) }}</span><a class="vehicle-arrow" href="{{ route('store.show', $car) }}" aria-label="View vehicle details">↗</a></div></div>
+                <div class="vehicle-info"><span class="vehicle-category">{{ $car->category->name }}</span><h2 class="vehicle-name">{{ $car->make }} {{ $car->model }}</h2><p class="vehicle-year">{{ $car->year }} · {{ ucfirst($car->condition) }}</p><div class="vehicle-specs"><span>{{ number_format($car->mileage) }} KM</span><span>{{ $car->transmission ?: 'Contact us' }}</span><span>{{ $car->fuel_type ?: 'Available' }}</span>                </div><div class="vehicle-price-row"><span class="vehicle-price">@if($car->original_price)<del>₱ {{ number_format($car->original_price, 0) }}</del> @endif₱ {{ number_format($car->price, 0) }}</span><a class="vehicle-arrow" href="{{ route('store.show', $car) }}" aria-label="View vehicle details">↗</a></div></div>
             </article>
         @empty
             <p class="empty-state">No vehicles are currently listed. Check back soon.</p>
@@ -40,5 +40,6 @@
     </div><div class="store-pagination">{{ $cars->links() }}</div></div></section>
 </main>
 @include('partials.faq-chat')
+<script src="{{ asset('js/landing.js') }}" defer></script>
 </body>
 </html>

@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/faq-chat.css') }}">
 </head>
 <body>
 @include('partials.store-nav')
@@ -39,7 +38,6 @@
         @endforelse
     </div><div class="store-pagination">{{ $cars->links() }}</div></div></section>
 </main>
-@include('partials.faq-chat')
 <script src="{{ asset('js/landing.js') }}" defer></script>
 </body>
 </html>

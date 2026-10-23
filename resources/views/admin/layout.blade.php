@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/faq-chat.css') }}">
 </head>
 <body class="admin-body">
 <div class="admin-store-nav">@include('partials.store-nav')</div>
@@ -22,6 +21,7 @@
         <a class="{{ request()->routeIs('admin.cars.*') ? 'is-active' : '' }}" href="{{ route('admin.cars.index') }}"><span>◈</span> Cars</a>
         <a class="{{ request()->routeIs('admin.categories.*') ? 'is-active' : '' }}" href="{{ route('admin.categories.index') }}"><span>◇</span> Categories</a>
         <a class="{{ request()->routeIs('admin.users.*') ? 'is-active' : '' }}" href="{{ route('admin.users.index') }}"><span>♙</span> Users</a>
+        <a class="{{ request()->routeIs('admin.chats.*') ? 'is-active' : '' }}" href="{{ route('admin.chats.index') }}"><span>◌</span> Chats</a>
     </nav>
     <div class="admin-sidebar-bottom">
         <a href="{{ route('home') }}">↗ View storefront</a>
@@ -34,7 +34,6 @@
     @if ($errors->any())<div class="admin-alert admin-alert-error">{{ $errors->first() }}</div>@endif
     @yield('content')
 </main>
-@include('partials.faq-chat')
 <script src="{{ asset('js/landing.js') }}" defer></script>
 </body>
 </html>

@@ -55,9 +55,14 @@ class AuthController
         return redirect()->route('account');
     }
 
-    public function account(): View
+    public function account(Request $request): View
     {
-        return view('auth.account');
+        $chatConversations = auth()->user()->chatConversations()->where('status', 'open')->latest('last_message_at')->get();
+        $selectedConversation = $request->filled('conversation')
+            ? auth()->user()->chatConversations()->where('status', 'open')->with(['messages' => fn ($query) => $query->oldest()])->find($request->integer('conversation'))
+            : null;
+
+        return view('auth.account', compact('chatConversations', 'selectedConversation'));
     }
 
     public function updateProfile(Request $request): RedirectResponse

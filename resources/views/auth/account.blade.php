@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/faq-chat.css') }}">
 </head>
 <body>
 @include('partials.store-nav')
@@ -29,6 +28,22 @@
             <div class="form-group"><label for="profile_photo">Profile photo <small>JPG, PNG, or WebP; 2 MB maximum</small></label><input id="profile_photo" name="profile_photo" type="file" accept="image/jpeg,image/png,image/webp"></div>
             <button class="btn" type="submit">Save profile</button>
         </form>
+        <div class="account-section account-messenger">
+            <p class="eyebrow">Messenger</p><h2>Messages</h2>
+            @if($selectedConversation)
+                <div class="messenger-thread-heading"><a href="{{ route('account') }}" aria-label="Back to conversations">←</a><div><strong>Quill Motors</strong><small>Owner</small></div></div>
+                <div class="account-chat-thread">@foreach($selectedConversation->messages as $message)<div class="account-chat-message account-chat-message-{{ $message->sender_type }}"><span class="chat-message-avatar">{{ $message->sender_type === 'customer' ? strtoupper(substr(auth()->user()->name, 0, 1)) : 'Q' }}</span><div><strong>{{ $message->sender_type === 'customer' ? 'You' : 'Quill Motors' }}</strong><small>{{ $message->created_at->diffForHumans() }} · {{ $message->created_at->format('M j, g:i A') }}</small><p>{{ $message->body }}</p></div></div>@endforeach</div>
+                <form method="POST" action="{{ route('chat.messages.store') }}" class="account-chat-reply">@csrf<textarea name="body" rows="2" placeholder="Write a message..." required></textarea><button class="btn" type="submit">Send</button></form>
+            @else
+                <div class="messenger-list">
+                    @forelse($chatConversations as $conversation)
+                        <a href="{{ route('account', ['conversation' => $conversation->id]) }}" class="messenger-contact"><span class="profile-avatar small-avatar">Q</span><span><strong>Quill Motors</strong><small>{{ $conversation->last_message_at?->diffForHumans() }}</small></span><b>→</b></a>
+                    @empty
+                        <p class="form-note">Your FAQ questions and owner conversations will appear here.</p>
+                    @endforelse
+                </div>
+            @endif
+        </div>
         <div class="account-section">
             <p class="eyebrow">Security</p><h2>Change password</h2>
             <form method="POST" action="{{ route('account.password.update') }}" class="profile-form">
@@ -49,7 +64,6 @@
         </form>
     </section>
 </main>
-@include('partials.faq-chat')
 <script src="{{ asset('js/landing.js') }}" defer></script>
 </body>
 </html>

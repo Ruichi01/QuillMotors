@@ -1,6 +1,5 @@
 <header class="navbar">
     <div class="container nav-inner">
-        <a href="{{ route('home') }}" class="brand">Quill<span>.</span></a>
         <nav class="nav-links" id="navLinks" aria-label="Main navigation">
             <a href="{{ route('home') }}">Home</a>
             <a href="{{ route('store') }}">Market</a>

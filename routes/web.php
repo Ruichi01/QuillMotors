@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InquiryController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\Admin\AdminChatController;
 use App\Http\Controllers\StoreController;
 
 Route::get('/', HomeController::class)->name('home');
@@ -16,6 +18,9 @@ Route::get('/store/{car}', [StoreController::class, 'show'])->name('store.show')
 Route::post('/inquiries', [InquiryController::class, 'store'])
     ->middleware('throttle:5,1')
     ->name('inquiries.store');
+Route::get('/chat/messages', [ChatController::class, 'messages'])->name('chat.messages');
+Route::post('/chat/messages', [ChatController::class, 'store'])->name('chat.messages.store');
+Route::post('/chat/close', [ChatController::class, 'close'])->name('chat.close');
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -40,4 +45,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::resource('cars', AdminCarController::class)->except('show');
     Route::resource('categories', AdminCategoryController::class)->except('show');
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
+    Route::get('/chats', [AdminChatController::class, 'index'])->name('chats.index');
 });

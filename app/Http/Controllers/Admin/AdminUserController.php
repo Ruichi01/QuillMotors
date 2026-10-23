@@ -21,4 +21,15 @@ class AdminUserController extends Controller
 
         return view('admin.users.index', compact('users'));
     }
+
+    public function show(User $user): View
+    {
+        $user->load([
+            'inquiries' => fn ($query) => $query->with('car')->latest(),
+            'favorites' => fn ($query) => $query->with('car')->latest(),
+            'chatConversations' => fn ($query) => $query->with(['messages' => fn ($messages) => $messages->oldest()])->latest('last_message_at'),
+        ]);
+
+        return view('admin.users.show', compact('user'));
+    }
 }

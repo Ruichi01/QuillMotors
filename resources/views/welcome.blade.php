@@ -27,7 +27,10 @@
                     </button>
                     <div class="profile-menu-panel" id="profileMenu" hidden>
                         <a href="{{ route('account') }}">Profile settings</a>
-                        @if (auth()->user()->role === 'admin')<a href="{{ route('admin.dashboard') }}">Admin dashboard</a>@endif
+                        @if (auth()->user()->role === 'admin')
+                            <a href="{{ route('admin.dashboard') }}">Admin dashboard</a>
+                            <a href="{{ route('admin.chats.index') }}">View customer chats</a>
+                        @endif
                         <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit">Sign out</button></form>
                     </div>
                 </div>
@@ -162,7 +165,11 @@
         <div class="footer-bottom"><p>© {{ date('Y') }} Quill Motors. All rights reserved.</p><p>DESIGNED FOR THE LOVE OF DRIVING.</p></div>
     </div>
 </footer>
-@include('partials.faq-chat')
+@if (auth()->user()?->role === 'admin')
+    @include('partials.admin-chat')
+@else
+    @include('partials.faq-chat')
+@endif
 <script src="{{ asset('js/landing.js') }}" defer></script>
 </body>
 </html>

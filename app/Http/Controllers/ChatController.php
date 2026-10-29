@@ -73,10 +73,10 @@ class ChatController extends Controller
         $conversation = $this->conversation($request);
 
         if ($conversation) {
-            $conversation->delete();
+            $conversation->update(['status' => 'closed']);
         }
 
-        return response()->json(['closed' => true]);
+        return response()->json(['closed' => true, 'archived' => true]);
     }
 
     private function conversation(Request $request, array $details = [], bool $includeClosed = false): ?ChatConversation

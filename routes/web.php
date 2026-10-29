@@ -46,5 +46,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::resource('categories', AdminCategoryController::class)->except('show');
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
+    Route::get('/chats/inbox', [AdminChatController::class, 'inbox'])->name('chats.inbox');
+    Route::post('/chats/messages', [AdminChatController::class, 'storeMessage'])->name('chats.messages.store');
     Route::get('/chats', [AdminChatController::class, 'index'])->name('chats.index');
 });

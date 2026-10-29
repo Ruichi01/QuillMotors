@@ -17,7 +17,7 @@
             <form data-faq-form><textarea data-chat-body rows="2" placeholder="Type your message..." aria-label="Chat message" required></textarea><button type="submit">Send</button></form>
             <p class="faq-chat-status" data-chat-status></p>
         </div>
-        <button class="faq-chat-close-thread" type="button" data-faq-close-thread hidden>Close conversation</button>
+        <button class="faq-chat-close-thread" type="button" data-faq-close-thread hidden>Close and archive conversation</button>
         <input type="hidden" data-chat-csrf value="{{ csrf_token() }}">
     </section>
 </div>

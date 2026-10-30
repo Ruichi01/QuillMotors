@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const body = chat.querySelector('[data-chat-body]');
         const status = chat.querySelector('[data-chat-status]');
         let selectedQuestion = null;
+        const sharedCars = new Set();
         const answers = {
             'How do I inquire about a car?': 'Open any available car and use the inquiry form on our contact page.',
             'Can I view a car in person?': 'Yes. Send us an inquiry and our team will arrange a convenient viewing.',
@@ -41,7 +42,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 name.textContent = message.sender_name;
                 time.textContent = message.relative_time ? `${message.relative_time} · ${message.time}` : message.time;
                 text.textContent = message.body;
-                item.append(name, time, text);
+                item.append(name, time);
+                if (message.car) {
+                    const card = document.createElement('a');
+                    card.className = 'faq-chat-vehicle';
+                    card.href = message.car.url;
+                    card.target = '_blank';
+                    card.rel = 'noopener';
+                    if (message.car.image) {
+                        const image = document.createElement('img');
+                        image.src = message.car.image;
+                        image.alt = message.car.name;
+                        card.appendChild(image);
+                    }
+                    const details = document.createElement('span');
+                    details.innerHTML = `<strong></strong><small></small><em>View vehicle</em>`;
+                    details.querySelector('strong').textContent = message.car.name;
+                    details.querySelector('small').textContent = message.car.price;
+                    card.appendChild(details);
+                    item.appendChild(card);
+                }
+                item.appendChild(text);
                 messages.appendChild(item);
             });
             if (!serverMessages.length) {
@@ -141,8 +162,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 status.textContent = error.message;
             }
         });
+        chat.addEventListener('faq:open-vehicle', async (event) => {
+            const carId = Number(event.detail.carId);
+            if (!carId || sharedCars.has(carId)) return;
+            sharedCars.add(carId);
+            setOpen(true);
+            questions.hidden = true;
+            connect.hidden = true;
+            live.hidden = false;
+            closeThread.hidden = false;
+            title.textContent = 'Message about this car';
+            status.textContent = 'Sharing this vehicle...';
+            try {
+                await request({ body: 'Hi, I’m interested in this car.', car_id: carId });
+                status.textContent = 'Vehicle shared. Send a message to Quill Motors.';
+                await loadMessages();
+                body.focus();
+            } catch (error) {
+                sharedCars.delete(carId);
+                status.textContent = error.message;
+            }
+        });
         window.setInterval(() => {
             if (!panel.hidden) loadMessages();
         }, 8000);
+    });
+    document.querySelectorAll('[data-open-chat]').forEach((button) => {
+        button.addEventListener('click', () => {
+            const chat = document.querySelector('[data-faq-chat]');
+            chat?.dispatchEvent(new CustomEvent('faq:open-vehicle', {
+                detail: { carId: button.dataset.chatCarId },
+            }));
+        });
     });
 });

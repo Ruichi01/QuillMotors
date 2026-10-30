@@ -21,7 +21,10 @@
     }
   },
   "scripts": {
-    "dev": "@php artisan serve",
+    "dev": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php artisan serve"
+    ],
     "post-autoload-dump": [
         "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
         "@php artisan package:discover --ansi"

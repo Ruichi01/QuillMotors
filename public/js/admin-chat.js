@@ -29,6 +29,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.innerHTML = `<strong></strong><small></small><p></p>`;
                 item.querySelector('strong').textContent = message.sender_name;
                 item.querySelector('small').textContent = `${message.relative_time} · ${message.time}`;
+                if (message.car) {
+                    const card = document.createElement('a');
+                    card.className = 'faq-chat-vehicle';
+                    card.href = message.car.url;
+                    card.target = '_blank';
+                    card.rel = 'noopener';
+                    if (message.car.image) {
+                        const image = document.createElement('img');
+                        image.src = message.car.image;
+                        image.alt = message.car.name;
+                        card.appendChild(image);
+                    }
+                    const details = document.createElement('span');
+                    details.innerHTML = '<strong></strong><small></small><em>View vehicle</em>';
+                    details.querySelector('strong').textContent = message.car.name;
+                    details.querySelector('small').textContent = message.car.price;
+                    card.appendChild(details);
+                    item.insertBefore(card, item.querySelector('p'));
+                }
                 item.querySelector('p').textContent = message.body;
                 thread.appendChild(item);
             });

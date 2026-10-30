@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ChatConversation;
 use App\Models\ChatMessage;
+use App\Models\Car;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -16,7 +17,7 @@ class ChatController extends Controller
 
         return response()->json([
             'conversation_id' => $conversation?->id,
-            'messages' => $conversation?->messages()->with('conversation.user')->oldest()->get()->map(fn (ChatMessage $message): array => $this->messageData($message)) ?? [],
+            'messages' => $conversation?->messages()->with(['conversation.user', 'car.images'])->oldest()->get()->map(fn (ChatMessage $message): array => $this->messageData($message)) ?? [],
         ]);
     }
 
@@ -25,15 +26,20 @@ class ChatController extends Controller
         $validated = $request->validate([
             'body' => ['required', 'string', 'max:3000'],
             'faq_question' => ['nullable', 'string', 'max:255'],
+            'car_id' => ['nullable', 'integer', 'exists:cars,id'],
             'name' => ['nullable', 'string', 'max:120'],
             'email' => ['nullable', 'email', 'max:190'],
         ]);
 
+        $car = ! empty($validated['car_id'])
+            ? Car::query()->with('images')->where('status', 'available')->findOrFail($validated['car_id'])
+            : null;
         $conversation = $this->conversation($request, $validated);
         $conversation->update(['status' => 'open']);
         $message = $conversation->messages()->create([
             'sender_type' => 'customer',
             'user_id' => auth()->id(),
+            'car_id' => $car?->id,
             'body' => $validated['body'],
             'faq_question' => $validated['faq_question'] ?? null,
         ]);
@@ -126,6 +132,15 @@ class ChatController extends Controller
                 ? ($message->conversation->user?->name ?? $message->conversation->name ?? 'You')
                 : ($message->sender_type === 'assistant' ? 'Quill Motors' : 'Owner'),
             'body' => $message->body,
+            'car' => $message->car ? [
+                'id' => $message->car->id,
+                'name' => "{$message->car->make} {$message->car->model}",
+                'price' => '₱ '.number_format($message->car->price, 0),
+                'url' => route('store.show', $message->car),
+                'image' => ($image = ($message->car->images->firstWhere('is_primary', true) ?? $message->car->images->first()))
+                    ? asset($image->image_path)
+                    : null,
+            ] : null,
             'time' => $message->created_at->format('M j, g:i A'),
             'relative_time' => $message->created_at->diffForHumans(),
             'created_at' => $message->created_at->toIso8601String(),

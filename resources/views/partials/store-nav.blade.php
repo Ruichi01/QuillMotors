@@ -28,3 +28,6 @@
         <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navLinks">Menu</button>
     </div>
 </header>
+@if (auth()->user()?->role === 'admin')
+    @include('partials.admin-chat')
+@endif

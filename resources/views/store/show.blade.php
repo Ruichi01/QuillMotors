@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/faq-chat.css') }}">
 </head>
 <body>
 @include('partials.store-nav')
@@ -24,8 +25,11 @@
             </div>
         @endif
     </div>
-    <div class="detail-content"><p class="eyebrow">{{ $car->category->name }}</p><h1 class="section-heading">{{ $car->make }}<br>{{ $car->model }}</h1><p class="detail-price">@if($car->original_price)<del>₱ {{ number_format($car->original_price, 0) }}</del> @endif ₱ {{ number_format($car->price, 0) }}</p><p class="detail-description">{{ $car->description ?: 'Contact Quill Motors for more information about this vehicle.' }}</p><div class="detail-spec-grid"><div><span>Year</span><strong>{{ $car->year }}</strong></div><div><span>Odometer</span><strong>{{ number_format($car->mileage) }} km</strong></div><div><span>Transmission</span><strong>{{ $car->transmission ?: 'Not specified' }}</strong></div><div><span>Fuel type</span><strong>{{ $car->fuel_type ?: 'Not specified' }}</strong></div><div><span>Condition</span><strong>{{ ucfirst($car->condition) }}</strong></div><div><span>Status</span><strong>{{ ucfirst($car->status) }}</strong></div></div><a class="btn" href="{{ route('home', ['#' => 'contact']) }}">Ask about this car <span>↗</span></a><a class="detail-back" href="{{ route('store') }}">← Back to the market</a></div>
+    <div class="detail-content"><p class="eyebrow">{{ $car->category->name }}</p><h1 class="section-heading">{{ $car->make }}<br>{{ $car->model }}</h1><p class="detail-price">@if($car->original_price)<del>₱ {{ number_format($car->original_price, 0) }}</del> @endif ₱ {{ number_format($car->price, 0) }}</p><p class="detail-description">{{ $car->description ?: 'Contact Quill Motors for more information about this vehicle.' }}</p><div class="detail-spec-grid"><div><span>Year</span><strong>{{ $car->year }}</strong></div><div><span>Odometer</span><strong>{{ number_format($car->mileage) }} km</strong></div><div><span>Transmission</span><strong>{{ $car->transmission ?: 'Not specified' }}</strong></div><div><span>Fuel type</span><strong>{{ $car->fuel_type ?: 'Not specified' }}</strong></div><div><span>Condition</span><strong>{{ ucfirst($car->condition) }}</strong></div><div><span>Status</span><strong>{{ ucfirst($car->status) }}</strong></div></div><button class="btn" type="button" data-open-chat data-chat-car-id="{{ $car->id }}">Ask about this car <span>↗</span></button><a class="detail-back" href="{{ route('store') }}">← Back to the market</a></div>
 </div></main>
+@unless (auth()->user()?->role === 'admin')
+    @include('partials.faq-chat')
+@endunless
 <script src="{{ asset('js/landing.js') }}" defer></script>
 </body>
 </html>

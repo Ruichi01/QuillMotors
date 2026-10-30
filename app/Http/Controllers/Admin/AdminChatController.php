@@ -30,7 +30,7 @@ class AdminChatController extends Controller
             ->withQueryString();
 
         $selected = $request->filled('conversation')
-            ? ChatConversation::when(in_array($status, ['open', 'closed'], true), fn ($query) => $query->where('status', $status))->with(['user', 'messages' => fn ($query) => $query->oldest()])->find($request->integer('conversation'))
+            ? ChatConversation::when(in_array($status, ['open', 'closed'], true), fn ($query) => $query->where('status', $status))->with(['user', 'messages.car.images', 'messages' => fn ($query) => $query->oldest()])->find($request->integer('conversation'))
             : null;
 
         return view('admin.chats.index', compact('conversations', 'selected', 'status'));
@@ -39,7 +39,7 @@ class AdminChatController extends Controller
     public function inbox(): JsonResponse
     {
         $conversations = ChatConversation::query()
-            ->with(['user', 'messages' => fn ($query) => $query->oldest()])
+            ->with(['user', 'messages.car.images', 'messages' => fn ($query) => $query->oldest()])
             ->orderByDesc('last_message_at')
             ->get();
 
@@ -81,6 +81,15 @@ class AdminChatController extends Controller
                 ? ($message->conversation->user?->name ?? $message->conversation->name ?? 'Guest visitor')
                 : ($message->user?->name ?? 'Quill Motors'),
             'body' => $message->body,
+            'car' => $message->car ? [
+                'id' => $message->car->id,
+                'name' => "{$message->car->make} {$message->car->model}",
+                'price' => '₱ '.number_format($message->car->price, 0),
+                'url' => route('store.show', $message->car),
+                'image' => ($image = ($message->car->images->firstWhere('is_primary', true) ?? $message->car->images->first()))
+                    ? asset($image->image_path)
+                    : null,
+            ] : null,
             'time' => $message->created_at->format('M j, g:i A'),
             'relative_time' => $message->created_at->diffForHumans(),
         ];
